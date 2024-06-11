@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+
+	"github.com/a-h/templ"
 )
 
 type TreeServer struct {
@@ -36,7 +38,8 @@ func (t *TreeServer) handleReq(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	if file.IsDir() {
-		return WriteJSON(w, http.StatusOK, readDir(fpath, t.wd))
+		items := readDir(fpath, t.wd)
+		return WriteTempl(w, r, http.StatusOK, tree(items))
 	}
 
 	qp := r.URL.Query()
@@ -56,6 +59,12 @@ func WriteJSON(w http.ResponseWriter, status int, v any) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
 	return json.NewEncoder(w).Encode(v)
+}
+
+func WriteTempl(w http.ResponseWriter, r *http.Request, status int, component templ.Component) error {
+	w.Header().Set("Content-Type", "text/html")
+	w.WriteHeader(status)
+	return component.Render(r.Context(), w)
 }
 
 type treeFunc func(http.ResponseWriter, *http.Request) error
