@@ -36,7 +36,7 @@ func (t *TreeServer) handleReq(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	if file.IsDir() {
-		return WriteJSON(w, http.StatusOK, readDir(fpath))
+		return WriteJSON(w, http.StatusOK, readDir(fpath, t.wd))
 	}
 
 	qp := r.URL.Query()

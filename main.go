@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 )
 
 // The default port the application will run on
@@ -39,11 +40,12 @@ type Item struct {
 	Name     string `json:"name"`
 	IsDir    bool   `json:"isDir"`
 	AbsPath  string `json:"absPath"`
+	URL      string `json:"url"`
 	Children []Item `json:"children"`
 }
 
 // Returns the file system tree, reprenented as Items
-func readDir(dirP string) []Item {
+func readDir(dirP string, wd string) []Item {
 	// Open the directory
 	dir, err := os.Open(dirP)
 	if err != nil {
@@ -60,23 +62,46 @@ func readDir(dirP string) []Item {
 	var items []Item
 	for _, entry := range entries {
 		var (
-			name    = entry.Name()
-			isDir   = entry.IsDir()
-			absPath = dirP + "\\" + name
+			name     = entry.Name()
+			isDir    = entry.IsDir()
+			absPath  = formatAbsPath(dirP, name)
+			url      = formatURL(absPath, wd)
+			children []Item
 		)
 
-		children := []Item{}
 		if isDir {
-			children = readDir(absPath)
+			children = readDir(absPath, wd)
+		} else {
+			children = nil
 		}
 
 		items = append(items, Item{
 			Name:     name,
 			IsDir:    isDir,
 			AbsPath:  absPath,
+			URL:      url,
 			Children: children,
 		})
 	}
 
 	return items
+}
+
+func formatAbsPath(path string, fileName string) string {
+	return replaceAll(rmvTrailingSlash(path), "/", "\\") + "\\" + fileName
+}
+
+func rmvTrailingSlash(path string) string {
+	if len(path) > 0 && path[len(path)-1] == '/' {
+		return path[:len(path)-1]
+	}
+	return path
+}
+
+func formatURL(absPath string, wd string) string {
+	return replaceAll(replaceAll(absPath, "\\", "/"), replaceAll(wd, "\\", "/"), "")
+}
+
+func replaceAll(input string, oldChar string, newChar string) string {
+	return strings.ReplaceAll(input, string(oldChar), string(newChar))
 }

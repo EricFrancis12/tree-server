@@ -8,8 +8,8 @@ The idea is that this will be a quick way to get a server up and running for a l
 
 ## To Do:
 
-- build the basic application
-- add ability to pass in args to the executable to specify PORT and DIR_PATH
+- (DONE) build the basic application
+- (DONE) add ability to pass in args to the executable to specify PORT and DIR_PATH
 - Dockerize it
 
 ## Diagram:
