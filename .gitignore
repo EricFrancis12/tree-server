@@ -1,0 +1,5 @@
+.env
+
+tree-server*
+*.exe
+*.mti
