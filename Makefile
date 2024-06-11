@@ -2,5 +2,5 @@ build:
 	go build .
 
 run: build
-	go run .
+	go run . $(ARGS)
 
