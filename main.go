@@ -7,21 +7,42 @@ import (
 	"os"
 )
 
+// The default port the application will run on
+// if the PORT flag is NOT specified.
+const defaultPort = 3000
+
 func main() {
-	port := *flag.Int("PORT", 3000, "The port that the application runs on")
+	var (
+		port = flag.Int("PORT", defaultPort, "The port that the application runs on")
+		wd   = flag.String("WD", "", "The working directory from where all nested files are served")
+	)
 	flag.Parse()
 
-	treeSvr := NewTreeServer(":" + fmt.Sprint(port))
+	if *wd == "" {
+		// If the WD flag is omitted,
+		// the directory where the application is running
+		// becomes the working directory.
+		_wd, err := os.Getwd()
+		if err != nil {
+			log.Fatal(ServerError{Error: "error getting work directory"})
+		}
+		*wd = _wd
+	}
+
+	treeSvr := NewTreeServer(":"+fmt.Sprint(*port), *wd)
 	treeSvr.Run()
 }
 
+// An Item represents either a file or a folder in the file system.
+// An Item can have more Items as it's Children if it's a folder (IsDir == true).
 type Item struct {
 	Name     string `json:"name"`
 	IsDir    bool   `json:"isDir"`
 	AbsPath  string `json:"absPath"`
-	Children []Item `json:"children,omitempty"`
+	Children []Item `json:"children"`
 }
 
+// Returns the file system tree, reprenented as Items
 func readDir(dirP string) []Item {
 	// Open the directory
 	dir, err := os.Open(dirP)

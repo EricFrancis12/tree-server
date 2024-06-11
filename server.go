@@ -9,33 +9,30 @@ import (
 
 type TreeServer struct {
 	listenAddr string
+	wd         string
 }
 
 type ServerError struct {
 	Error string `json:"error"`
 }
 
-func NewTreeServer(listenAddr string) *TreeServer {
+func NewTreeServer(listenAddr string, wd string) *TreeServer {
 	return &TreeServer{
 		listenAddr: listenAddr,
+		wd:         wd,
 	}
 }
 
 func (t *TreeServer) Run() {
-	fmt.Println("Tree Server starting on port ", t.listenAddr)
+	fmt.Println("Tree Server starting on port " + t.listenAddr)
 	http.ListenAndServe(t.listenAddr, makeHTTPHandlerFunc(t.handleReq))
 }
 
-func (*TreeServer) handleReq(w http.ResponseWriter, r *http.Request) error {
-	wd, err := os.Getwd()
-	if err != nil {
-		return WriteJSON(w, http.StatusInternalServerError, ServerError{Error: err.Error()})
-	}
-
-	fpath := wd + r.URL.Path
+func (t *TreeServer) handleReq(w http.ResponseWriter, r *http.Request) error {
+	fpath := t.wd + r.URL.Path
 	file, err := os.Stat(fpath)
 	if err != nil {
-		return WriteJSON(w, http.StatusInternalServerError, ServerError{Error: "error reading file at " + fpath})
+		return WriteJSON(w, http.StatusInternalServerError, ServerError{Error: "error reading file: " + fpath})
 	}
 
 	if file.IsDir() {
@@ -44,7 +41,7 @@ func (*TreeServer) handleReq(w http.ResponseWriter, r *http.Request) error {
 
 	qp := r.URL.Query()
 	// If dl=1 or download=1 are passed in the query string,
-	// we are downloading the file to the user's browser.
+	// download the file to the user's browser.
 	shouldDownload := qp.Get("dl") == "1" || qp.Get("download") == "1"
 	if shouldDownload {
 		// Set the appropriate header so the browser downloads the file.
