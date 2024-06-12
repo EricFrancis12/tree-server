@@ -1,11 +1,71 @@
 package main
 
-templ tree(items []Item) {
-    <div>
-        <ul>
-        for _, item := range items {
-            <li>{ item.Name }</li>
+import "strconv"
+
+templ Tree(items []Item) {
+	<style>
+        svg {
+            height: 1em;
         }
-        </ul>
-    </div>
+
+        ul {
+            cursor: pointer;
+            font
+        }
+
+        li {
+            list-style-type: none;
+        }
+
+        .list-item-content {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+    </style>
+	<script type="text/javascript">
+        function handleClick(event) {
+            console.log(event.target);
+            event.stopPropagation();
+        }
+    </script>
+	@Items(items)
+}
+
+templ Items(items []Item) {
+	<div>
+		<ul
+			data-open="false"
+			onclick="handleClick(event)"
+		>
+			for _, item := range items {
+				<li
+					data-name={ item.Name }
+					data-isdir={ strconv.FormatBool(item.IsDir) }
+					data-abspath={ item.AbsPath }
+					data-url={ item.URL }
+				>
+					<div class="list-item-content">
+						if !item.IsDir {
+							<a href={ templ.URL(item.URL + "?dl=1") }>
+								@DownloadIcon()
+							</a>
+						}
+						<a href={ templ.URL(item.URL) }>
+							{ item.Name }
+						</a>
+					</div>
+					if len(item.Children) > 0 {
+						@Items(item.Children)
+					}
+				</li>
+			}
+		</ul>
+	</div>
+}
+
+templ DownloadIcon() {
+	<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="arrow-down-to-line" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" class="svg-inline--fa fa-arrow-down-to-line fa-fw fa-lg">
+		<path fill="currentColor" d="M32 480c-17.7 0-32-14.3-32-32s14.3-32 32-32l320 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 480zM214.6 342.6c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 242.7 160 64c0-17.7 14.3-32 32-32s32 14.3 32 32l0 178.7 73.4-73.4c12.5-12.5 32.8-12.5 45.3 0s12.5 32.8 0 45.3l-128 128z" class=""></path>
+	</svg>
 }

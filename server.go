@@ -39,7 +39,7 @@ func (t *TreeServer) handleReq(w http.ResponseWriter, r *http.Request) error {
 
 	if file.IsDir() {
 		items := readDir(fpath, t.wd)
-		return WriteTempl(w, r, http.StatusOK, tree(items))
+		return WriteTempl(w, r, http.StatusOK, Tree(items))
 	}
 
 	qp := r.URL.Query()

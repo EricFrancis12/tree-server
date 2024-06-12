@@ -1,4 +1,5 @@
 build:
+	templ generate
 	go build .
 
 run: build
