@@ -3,7 +3,7 @@ build:
 	go build .
 
 run: build
-	go run . $(ARGS)
+	./tree-server $(ARGS)
 
 # How to pass in arguments:
 #
