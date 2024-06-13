@@ -14,6 +14,8 @@ The idea is that this will be a quick way to get a server up and running for a l
 
 ## Diagram:
 
+```base
+
 $ tree-server.exe --PORT=3000
 |-> videos
     |-> movies
@@ -24,3 +26,5 @@ $ tree-server.exe --PORT=3000
 |-> pictures
     |-> family-photos
         |-> first-birthday.jpeg         -->     http://localhost:3000/pictures/family-photos/first-birthday.jpeg
+
+```
