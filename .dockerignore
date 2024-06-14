@@ -1,0 +1,13 @@
+Dockerfile
+.dockerignore
+
+.git
+.gitignore
+
+README.md
+Makefile
+
+bin
+tree-server*
+*.exe
+*.mti
