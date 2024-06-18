@@ -15,7 +15,8 @@ type TreeServer struct {
 }
 
 type ServerError struct {
-	Error string `json:"error"`
+	Error   string `json:"error"`
+	Message string `json:"message"`
 }
 
 func NewTreeServer(listenAddr string, wd string) *TreeServer {
@@ -34,7 +35,10 @@ func (t *TreeServer) handleReq(w http.ResponseWriter, r *http.Request) error {
 	fpath := t.wd + r.URL.Path
 	file, err := os.Stat(fpath)
 	if err != nil {
-		return WriteJSON(w, http.StatusInternalServerError, ServerError{Error: "error reading file: " + fpath})
+		return WriteJSON(w, http.StatusInternalServerError, ServerError{
+			Error:   err.Error(),
+			Message: "error reading file: " + fpath,
+		})
 	}
 
 	if file.IsDir() {
@@ -72,7 +76,10 @@ type treeFunc func(http.ResponseWriter, *http.Request) error
 func makeHTTPHandlerFunc(f treeFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if err := f(w, r); err != nil {
-			WriteJSON(w, http.StatusBadRequest, ServerError{Error: err.Error()})
+			WriteJSON(w, http.StatusBadRequest, ServerError{
+				Error:   err.Error(),
+				Message: "bad request",
+			})
 		}
 	}
 }

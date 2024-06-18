@@ -25,7 +25,10 @@ func main() {
 		// becomes the working directory.
 		_wd, err := os.Getwd()
 		if err != nil {
-			log.Fatal(ServerError{Error: "error getting work directory"})
+			log.Fatal(ServerError{
+				Error:   err.Error(),
+				Message: "error getting work directory",
+			})
 		}
 		*wd = _wd
 	}
@@ -49,14 +52,20 @@ func readDir(dirP string, wd string) []Item {
 	// Open the directory
 	dir, err := os.Open(dirP)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal(ServerError{
+			Error:   err.Error(),
+			Message: "error opening directory",
+		})
 	}
 	defer dir.Close()
 
 	// Read the directory entries
 	entries, err := dir.Readdir(-1)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal(ServerError{
+			Error:   err.Error(),
+			Message: "error reading directory contents",
+		})
 	}
 
 	var items []Item
