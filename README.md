@@ -22,7 +22,7 @@ Make sure you have [Go](https://go.dev/doc/install) installed.
 
 Clone the repo:
 ```
-git clone https://github.com/EricFrancis12/tree-server
+git clone https://github.com/EricFrancis12/tree-server.git
 ```
 
 ```
@@ -65,13 +65,13 @@ Run it using the following command:
 docker run -p 3000:3000 -v .:/app/serve --name tree-server tree-server
 ```
 
-The contents of the `/app/serve` directory located inside the container will be served. To bind `/app/serve` to a directory on your local machine, use a bind mount. In the above command, we are binding the `/app/serve` directory to the current local directory `.`.
+The contents of the `/app/serve` directory located inside the container will be served. To bind `/app/serve` to a directory on your local machine, use a bind mount. In the above command, we are binding the current local directory `.` to the `/app/serve` directory.
 
 For more information on bind mounts, [click here](https://docs.docker.com/storage/bind-mounts/).
 
 For more information on port mapping using the `-p` flag, [click here](https://docs.docker.com/network/#published-ports)
 
-## Use the Application in the browser
+## Using the Application
 Once the Application is running, visit it at your chosen port:
 
 [http://localhost:3000](http://localhost:3000)
