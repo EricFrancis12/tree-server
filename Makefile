@@ -1,5 +1,7 @@
-build:
+templ:
 	templ generate
+
+build:
 	go build .
 
 # How to pass in arguments:
