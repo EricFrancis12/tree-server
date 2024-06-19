@@ -47,7 +47,7 @@ This will create a binary file located at `./tree-server`.
 
 Run the binary, optionally specifying a port (PORT) and working directory (WD).
 
-Note that if no working directory is specified, the working directory will be the location where the binary is ran. This means you can copy the binary to anywhere in the file system to serve the contents.
+Note that if no working directory is specified, the working directory will be the location where the binary is ran. This means you can copy the binary to anywhere in the file system to serve its contents.
 ```
 ./tree-server --PORT=3000 --WD=./
 ```
@@ -72,13 +72,11 @@ For more information on bind mounts, [click here](https://docs.docker.com/storag
 For more information on port mapping using the `-p` flag, [click here](https://docs.docker.com/network/#published-ports)
 
 ## Use the Application in the browser
-Once the Application is running, visit it at your chosen port.
+Once the Application is running, visit it at your chosen port:
 
 [http://localhost:3000](http://localhost:3000)
 
 ### Downloading files
-Use `dl=1` or `download=1` to download the file if it exists. Example:
+Use `dl=1` or `download=1` to download the file if it exists.
 
-```
-http://localhost:3000/my/file.txt?dl=1
-```
+Example: http://localhost:3000/my/file.txt?dl=1
