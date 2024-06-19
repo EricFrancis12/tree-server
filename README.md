@@ -40,7 +40,7 @@ In the example above, `--WD=./` means the contents of this repo will be served o
 ### Option B: Build and Run
 Run the following command:
 ```
-go build -o tree-server .
+go build .
 ```
 
 This will create a binary file located at `./tree-server`.
